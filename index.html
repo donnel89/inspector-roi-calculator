@@ -944,7 +944,7 @@
     const yearlyHours = weeklyHoursSaved * 48;
     const moneySaved = yearlyHours * r;
 
-    const showErrors = activeRole !== 'planner';
+    const showErrors = activeRole !== 'planner' && activeRole !== 'contractor';
     const errorSaved = showErrors ? b * p * 0.015 * mult : 0;
 
     const rolesWithoutCoord = ['manager', 'supervisor', 'authority', 'planner'];
