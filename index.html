@@ -940,7 +940,8 @@
     const activeRole = document.querySelector('.role-pill.active')?.dataset.role || 'manager';
     const mult = roleMult[activeRole] || 1;
 
-    const weeklyHoursSaved = h * 0.65 * p * mult;
+    const hoursFactor = activeRole === 'estimator' ? 0.85 : 0.65;
+    const weeklyHoursSaved = h * hoursFactor * p * mult;
     const yearlyHours = weeklyHoursSaved * 48;
     const moneySaved = yearlyHours * r;
 
