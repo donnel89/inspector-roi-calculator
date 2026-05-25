@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מחשבון חיסכון | Inspector Projects</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --ink-soft: #3a3a3a;
+    --ink-muted: #7a7a7a;
+    --surface: #f5f3ef;
+    --surface-card: #ffffff;
+    --accent: #1a5cff;
+    --accent-soft: #e8eeff;
+    --accent-dark: #0038cc;
+    --green: #00854a;
+    --green-soft: #e0f5eb;
+    --border: #e0ddd6;
+    --border-strong: #c8c4bb;
+    --radius: 12px;
+    --radius-sm: 8px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    background: var(--surface);
+    color: var(--ink);
+    min-height: 100vh;
+    direction: rtl;
+  }
+
+  /* ─── HERO STRIP ─── */
+  .hero {
+    background: var(--ink);
+    color: #fff;
+    padding: 56px 40px 48px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -80px; left: -80px;
+    width: 340px; height: 340px;
+    background: radial-gradient(circle, rgba(26,92,255,0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(26,92,255,0.2);
+    border: 1px solid rgba(26,92,255,0.4);
+    color: #7fa7ff;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 4px 12px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+  }
+  .hero-tag svg { width: 12px; height: 12px; fill: currentColor; }
+  .hero h1 {
+    font-size: clamp(24px, 5vw, 48px);
+    font-weight: 900;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .hero h1 span { color: #5b8fff; }
+  .hero p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.55);
+    max-width: 520px;
+    line-height: 1.65;
+    margin: 0 auto;
+  }
+
+  /* ─── MAIN LAYOUT ─── */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .card-header h2 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .card-header p {
+    font-size: 13px;
+    color: var(--ink-muted);
+    margin-top: 3px;
+  }
+  .card-body { padding: 24px; }
+
+  /* ─── SLIDERS ─── */
+  .slider-group { margin-bottom: 24px; }
+  .slider-group:last-child { margin-bottom: 0; }
+  .slider-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 8px;
+  }
+  .slider-label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    flex: 1;
+    line-height: 1.4;
+  }
+  .slider-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent);
+    background: var(--accent-soft);
+    padding: 2px 10px;
+    border-radius: 100px;
+    min-width: 72px;
+    text-align: center;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 4px;
+    background: var(--border-strong);
+    outline: none;
+    cursor: pointer;
+    touch-action: pan-y;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 1px var(--accent), 0 2px 6px rgba(26,92,255,0.3);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  input[type=range]:hover::-webkit-slider-thumb { transform: scale(1.15); box-shadow: 0 0 0 1px var(--accent), 0 4px 12px rgba(26,92,255,0.4); }
+  input[type=range]::-moz-range-thumb {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 1px var(--accent);
+    cursor: pointer;
+  }
+  .slider-range-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+  }
+  .slider-range-labels span {
+    font-size: 11px;
+    color: var(--ink-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ─── DIVIDER ─── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+
+  /* ─── ROLE PILLS ─── */
+  .role-section { margin-bottom: 0; }
+  .role-label {
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .role-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .role-pill {
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--border-strong);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ink-muted);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .role-pill:hover { border-color: var(--accent); color: var(--accent); }
+  .role-pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  /* ─── RESULTS PANEL ─── */
+  .results-panel {
+    position: sticky;
+    top: 24px;
+  }
+
+  .result-hero {
+    background: var(--ink);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(26,92,255,0.3) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .result-hero-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .result-hero-amount {
+    font-family: 'DM Mono', monospace;
+    font-size: 44px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    transition: all 0.3s ease;
+  }
+  .result-hero-amount span {
+    font-size: 20px;
+    color: rgba(255,255,255,0.5);
+    font-weight: 400;
+  }
+  .result-hero-sub {
+    margin-top: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .result-rows { margin-bottom: 16px; }
+  .result-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 20px;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    transition: border-color 0.2s;
+    gap: 8px;
+  }
+  .result-row:hover { border-color: var(--border-strong); }
+  .result-row-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    flex: 1;
+    min-width: 0;
+  }
+  .result-row-label-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .result-icon {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .result-icon svg { width: 14px; height: 14px; }
+  .result-row-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ─── ROI BAR ─── */
+  .roi-section {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+  .roi-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+  }
+  .roi-bar-wrap {
+    background: var(--surface);
+    border-radius: 4px;
+    height: 8px;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .roi-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #1a5cff, #00c87c);
+    border-radius: 4px;
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+  .roi-bar-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--ink-muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ─── PAYBACK ─── */
+  .payback-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--green-soft);
+    border: 1px solid rgba(0,133,74,0.2);
+    border-radius: var(--radius-sm);
+    padding: 12px 16px;
+    margin-bottom: 16px;
+  }
+  .payback-icon {
+    width: 32px; height: 32px;
+    background: var(--green);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .payback-icon svg { width: 16px; height: 16px; fill: #fff; }
+  .payback-text { font-size: 13px; color: var(--green); font-weight: 500; }
+  .payback-text span { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; }
+
+  /* ─── CTA ─── */
+  .cta-section { margin-top: 4px; }
+  .cta-btn {
+    width: 100%;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 15px 20px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.15s, transform 0.1s;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cta-btn:hover { background: var(--accent-dark); }
+  .cta-btn:active { transform: scale(0.98); }
+  .cta-btn svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+
+  .cta-form { display: none; }
+  .cta-form.open { display: block; }
+  .cta-input {
+    width: 100%;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--surface-card);
+    outline: none;
+    transition: border-color 0.15s;
+    margin-bottom: 8px;
+    text-align: right;
+  }
+  .cta-input:focus { border-color: var(--accent); }
+  .cta-input::placeholder { color: var(--ink-muted); }
+  .cta-submit {
+    width: 100%;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 13px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .cta-submit:hover { background: #2a2a2a; }
+  .cta-note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--ink-muted);
+    margin-top: 8px;
+  }
+
+  /* ─── FOOTER TRUST ─── */
+  .trust-strip {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--ink-muted);
+  }
+  .trust-item svg { width: 14px; height: 14px; fill: var(--accent); flex-shrink: 0; }
+
+  /* ─── SUCCESS STATE ─── */
+  .success-state {
+    display: none;
+    text-align: center;
+    padding: 32px 20px;
+  }
+  .success-state.show { display: block; }
+  .success-icon {
+    width: 56px; height: 56px;
+    background: var(--green-soft);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .success-icon svg { width: 26px; height: 26px; fill: var(--green); }
+  .success-state h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+  .success-state p { font-size: 14px; color: var(--ink-muted); }
+
+  /* ─── TRANSITION ─── */
+  .num { transition: all 0.35s cubic-bezier(.4,0,.2,1); }
+
+  /* ─── MOBILE STICKY BAR ─── */
+  .mobile-bar {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--ink);
+    color: #fff;
+    padding: 12px 20px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    z-index: 300;
+    border-top: 2px solid var(--accent);
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .mobile-bar-info { min-width: 0; }
+  .mobile-bar-label {
+    font-size: 10px;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 2px;
+  }
+  .mobile-bar-amount {
+    font-family: 'DM Mono', monospace;
+    font-size: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .mobile-bar-cta {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
+    transition: background 0.15s;
+  }
+  .mobile-bar-cta:active { background: var(--accent-dark); }
+
+  /* ─── RESPONSIVE: TABLET (≤860px) ─── */
+  @media (max-width: 860px) {
+    .mobile-bar { display: flex; }
+
+    body { padding-bottom: 72px; }
+
+    .hero {
+      padding: 36px 20px 32px;
+    }
+    .hero p { font-size: 14px; }
+
+    .main {
+      grid-template-columns: 1fr;
+      padding: 20px 16px 32px;
+      gap: 20px;
+    }
+
+    .results-panel {
+      position: static;
+    }
+
+    .card-header { padding: 16px 18px 14px; }
+    .card-body { padding: 18px; }
+
+    .slider-group { margin-bottom: 20px; }
+
+    .result-hero {
+      padding: 22px 20px;
+      margin-bottom: 12px;
+    }
+    .result-hero-amount { font-size: 38px; }
+
+    .result-rows { margin-bottom: 12px; }
+    .result-row {
+      padding: 11px 16px;
+      margin-bottom: 6px;
+    }
+
+    .roi-section { padding: 14px 16px; margin-bottom: 12px; }
+    .payback-badge { padding: 10px 14px; margin-bottom: 12px; }
+
+    .cta-btn { font-size: 14px; padding: 14px 16px; }
+
+    input[type=range] { height: 6px; }
+    input[type=range]::-webkit-slider-thumb { width: 26px; height: 26px; }
+    input[type=range]::-moz-range-thumb { width: 26px; height: 26px; }
+
+    .trust-strip { gap: 14px; }
+  }
+
+  /* ─── RESPONSIVE: MOBILE (≤540px) ─── */
+  @media (max-width: 540px) {
+    .hero { padding: 28px 16px 24px; }
+    .hero h1 { font-size: clamp(22px, 6.5vw, 30px); }
+    .hero p { font-size: 13px; line-height: 1.6; }
+    .hero-tag { font-size: 11px; }
+
+    .main { padding: 16px 12px 28px; gap: 16px; }
+
+    .card-header { padding: 14px 14px 12px; }
+    .card-header h2 { font-size: 14px; }
+    .card-header p { font-size: 12px; }
+    .card-body { padding: 14px; }
+
+    .slider-group { margin-bottom: 18px; }
+    .slider-label { font-size: 12px; }
+    .slider-val { font-size: 13px; padding: 2px 8px; min-width: 60px; }
+    .slider-range-labels span { font-size: 10px; }
+    .divider { margin: 16px 0; }
+
+    .role-label { font-size: 12px; }
+    .role-pill { padding: 5px 11px; font-size: 11px; }
+    .role-pills { gap: 6px; }
+
+    .result-hero { padding: 18px 16px; }
+    .result-hero-label { font-size: 11px; }
+    .result-hero-amount { font-size: 32px; }
+    .result-hero-amount span { font-size: 16px; }
+    .result-hero-sub { font-size: 12px; }
+
+    .result-row { padding: 10px 12px; }
+    .result-row-label { font-size: 12px; gap: 6px; }
+    .result-row-val { font-size: 13px; }
+    .result-icon { width: 24px; height: 24px; border-radius: 5px; }
+    .result-icon svg { width: 12px; height: 12px; }
+
+    .roi-section { padding: 12px 14px; }
+    .roi-title { font-size: 11px; }
+    .roi-bar-labels { font-size: 10px; }
+
+    .payback-badge { padding: 10px 12px; gap: 8px; }
+    .payback-text { font-size: 12px; }
+    .payback-text span { font-size: 13px; }
+    .payback-icon { width: 28px; height: 28px; border-radius: 7px; }
+    .payback-icon svg { width: 14px; height: 14px; }
+
+    .cta-btn { font-size: 13px; padding: 13px 14px; gap: 6px; }
+    .cta-btn svg { width: 16px; height: 16px; }
+    .cta-input { font-size: 13px; padding: 11px 12px; }
+    .cta-submit { font-size: 13px; padding: 12px; }
+
+    .trust-strip { flex-direction: column; gap: 8px; padding-top: 12px; margin-top: 14px; }
+    .trust-item { font-size: 11px; }
+
+    .mobile-bar-amount { font-size: 18px; }
+    .mobile-bar-cta { font-size: 12px; padding: 9px 14px; }
+
+    .success-state { padding: 24px 16px; }
+    .success-state h3 { font-size: 16px; }
+    .success-state p { font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">
+    <svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="5"/></svg>
+    גלה כמה הניהול הידני עולה לך
+  </div>
+  <h1>כמה עולה לכם <span>ניהול ידני</span><br>של פרויקטי תשתיות?</h1>
+  <p>ענו על 5 שאלות וגלו את הפוטנציאל הכלכלי האמיתי של מעבר למערכת Inspector.</p>
+</section>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT: SLIDERS -->
+  <div>
+    <!-- Card 1 -->
+    <div class="card" style="margin-bottom: 16px;">
+      <div class="card-header">
+        <h2>פרטי הפרויקטים שלך</h2>
+        <p>נתונים בסיסיים על עומס הפרויקטים</p>
+      </div>
+      <div class="card-body">
+
+        <div class="slider-group">
+          <div class="slider-top">
+            <span class="slider-label">מספר פרויקטים פעילים במקביל</span>
+            <span class="slider-val" id="v-projects">5</span>
+          </div>
+          <input type="range" id="s-projects" min="1" max="25" value="5" step="1">
+          <div class="slider-range-labels"><span>1</span><span>25</span></div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="slider-group">
+          <div class="slider-top">
+            <span class="slider-label">גודל צוות ממוצע לפרויקט</span>
+            <span class="slider-val" id="v-team">8 אנשים</span>
+          </div>
+          <input type="range" id="s-team" min="2" max="40" value="8" step="1">
+          <div class="slider-range-labels"><span>2</span><span>40</span></div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="role-section">
+          <div class="role-label">תפקיד עיקרי בפרויקט</div>
+          <div class="role-pills">
+            <button class="role-pill active" data-role="manager">מנהל פרויקט</button>
+            <button class="role-pill" data-role="supervisor">מפקח</button>
+            <button class="role-pill" data-role="contractor">קבלן</button>
+            <button class="role-pill" data-role="estimator">כמאי</button>
+            <button class="role-pill" data-role="planner">מתכנן</button>
+            <button class="role-pill" data-role="authority">רשות מקומית</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card">
+      <div class="card-header">
+        <h2>עלויות ניהול נוכחיות</h2>
+        <p>זמן וכסף שמושקעים בתהליכים ידניים</p>
+      </div>
+      <div class="card-body">
+
+        <div class="slider-group">
+          <div class="slider-top">
+            <span class="slider-label">שעות/שבוע על ניירת, דוחות ועדכונים ידניים</span>
+            <span class="slider-val" id="v-hours">12 שעות</span>
+          </div>
+          <input type="range" id="s-hours" min="1" max="60" value="12" step="1">
+          <div class="slider-range-labels"><span>1</span><span>60</span></div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="slider-group">
+          <div class="slider-top">
+            <span class="slider-label">עלות שעת עבודה ממוצעת</span>
+            <span class="slider-val" id="v-rate">₪150</span>
+          </div>
+          <input type="range" id="s-rate" min="80" max="500" value="150" step="10">
+          <div class="slider-range-labels"><span>₪80</span><span>₪500</span></div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="slider-group" style="margin-bottom:0">
+          <div class="slider-top">
+            <span class="slider-label">תקציב ממוצע לפרויקט</span>
+            <span class="slider-val" id="v-budget">₪20M</span>
+          </div>
+          <input type="range" id="s-budget" min="1" max="500" value="20" step="1">
+          <div class="slider-range-labels"><span>₪1M</span><span>₪500M</span></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: RESULTS -->
+  <div class="results-panel">
+
+    <!-- Big number -->
+    <div class="result-hero">
+      <div class="result-hero-label">חיסכון שנתי משוער</div>
+      <div class="result-hero-amount"><span>₪</span><span id="r-total" class="num">0</span></div>
+      <div class="result-hero-sub">עם מעבר למערכת Inspector</div>
+    </div>
+
+    <!-- Breakdown -->
+    <div class="result-rows">
+
+      <div class="result-row">
+        <div class="result-row-label">
+          <div class="result-icon" style="background:#eef2ff;">
+            <svg viewBox="0 0 16 16" fill="#1a5cff"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zm.75 3.5v3.19l2.28 2.28-1.06 1.06L7.25 8.31V4.5h1.5z"/></svg>
+          </div>
+          <span class="result-row-label-text">חיסכון בשעות עבודה</span>
+        </div>
+        <div class="result-row-val" id="r-hours">—</div>
+      </div>
+
+      <div class="result-row">
+        <div class="result-row-label">
+          <div class="result-icon" style="background:#fff0e8;">
+            <svg viewBox="0 0 16 16" fill="#e06c00"><path d="M8 1a7 7 0 100 14A7 7 0 008 1zM4.5 7.5h7v1h-7v-1z"/></svg>
+          </div>
+          <span class="result-row-label-text">שווי שעות (₪)</span>
+        </div>
+        <div class="result-row-val" id="r-money">—</div>
+      </div>
+
+      <div class="result-row">
+        <div class="result-row-label">
+          <div class="result-icon" style="background:#e8faf1;">
+            <svg viewBox="0 0 16 16" fill="#00854a"><path d="M13.78 4.22a.75.75 0 010 1.06l-7.25 7.25a.75.75 0 01-1.06 0L2.22 9.28a.75.75 0 011.06-1.06L6 10.94l6.72-6.72a.75.75 0 011.06 0z"/></svg>
+          </div>
+          <span class="result-row-label-text">מניעת שגיאות כמויות</span>
+        </div>
+        <div class="result-row-val" id="r-errors">—</div>
+      </div>
+
+      <div class="result-row">
+        <div class="result-row-label">
+          <div class="result-icon" style="background:#f5f0ff;">
+            <svg viewBox="0 0 16 16" fill="#6c3fc5"><path d="M8 2a6 6 0 100 12A6 6 0 008 2zm1 6.75h-2v-4h2v4zm0 2.5h-2v-1.5h2v1.5z"/></svg>
+          </div>
+          <span class="result-row-label-text">חיסכון בטעויות תיאום</span>
+        </div>
+        <div class="result-row-val" id="r-coord">—</div>
+      </div>
+
+    </div>
+
+    <!-- ROI Bar -->
+    <div class="roi-section">
+      <div class="roi-title">יחס חיסכון / עלות רישיון</div>
+      <div class="roi-bar-wrap">
+        <div class="roi-bar-fill" id="roi-bar"></div>
+      </div>
+      <div class="roi-bar-labels">
+        <span>עלות</span>
+        <span id="roi-label">ROI: —x</span>
+      </div>
+    </div>
+
+    <!-- Payback -->
+    <div class="payback-badge">
+      <div class="payback-icon">
+        <svg viewBox="0 0 16 16"><path d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM.5 8a7.5 7.5 0 1115 0 7.5 7.5 0 01-15 0zm10.28-1.72L7.25 9.81 5.72 8.28l-1.06 1.06 2.06 2.06a.75.75 0 001.06 0l3.56-3.56-1.06-1.06z"/></svg>
+      </div>
+      <div class="payback-text">החזר השקעה מלא תוך <span id="payback-months">—</span> חודשים</div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <div id="cta-default">
+        <button class="cta-btn" onclick="openForm()">
+          <svg viewBox="0 0 20 20"><path d="M10 1.5a8.5 8.5 0 100 17 8.5 8.5 0 000-17zm1 9h-2V6h2v4.5zm0 2.75h-2v-1.75h2v1.75z"/></svg>
+          רוצה לחסוך? דברו איתנו
+        </button>
+        <div class="cta-form" id="contact-form">
+          <input type="text" class="cta-input" placeholder="שם מלא" id="f-name">
+          <input type="text" class="cta-input" placeholder="חברה" id="f-company">
+          <input type="tel" class="cta-input" placeholder="טלפון" id="f-phone" dir="ltr" style="text-align:right">
+          <input type="email" class="cta-input" placeholder="אימייל" id="f-email" dir="ltr" style="text-align:right">
+          <button class="cta-submit" onclick="submitForm()">שליחה — אחזור אליך תוך 24 שעות</button>
+          <div class="cta-note">לא נשלח ספאם. מתחייבים.</div>
+        </div>
+        <div class="trust-strip">
+          <div class="trust-item">
+            <svg viewBox="0 0 14 14"><path d="M7 .5a6.5 6.5 0 100 13A6.5 6.5 0 007 .5zm3.28 4.72L6.28 9.22 3.72 6.66l1.06-1.06 1.5 1.5 3-3 1.06 1.06z"/></svg>
+            ללא התקנה
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 14 14"><path d="M7 .5a6.5 6.5 0 100 13A6.5 6.5 0 007 .5zm3.28 4.72L6.28 9.22 3.72 6.66l1.06-1.06 1.5 1.5 3-3 1.06 1.06z"/></svg>
+            SaaS בענן
+          </div>
+          <div class="trust-item">
+            <svg viewBox="0 0 14 14"><path d="M7 .5a6.5 6.5 0 100 13A6.5 6.5 0 007 .5zm3.28 4.72L6.28 9.22 3.72 6.66l1.06-1.06 1.5 1.5 3-3 1.06 1.06z"/></svg>
+            תמיכה בעברית
+          </div>
+        </div>
+      </div>
+
+      <!-- Success -->
+      <div class="success-state" id="success-state">
+        <div class="success-icon">
+          <svg viewBox="0 0 26 26"><path d="M21.28 6.72L10.28 17.72l-5.56-5.56-1.44 1.44 7 7 12-12-1.44-1.44z"/></svg>
+        </div>
+        <h3>תודה! קיבלנו את הפרטים</h3>
+        <p>נחזור אליך תוך 24 שעות עם הצעה מותאמת אישית על בסיס החישוב שלך.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MOBILE STICKY BAR -->
+<div class="mobile-bar" id="mobile-bar">
+  <div class="mobile-bar-info">
+    <div class="mobile-bar-label">חיסכון שנתי</div>
+    <div class="mobile-bar-amount"><span>₪</span><span id="mb-total">0</span></div>
+  </div>
+  <button class="mobile-bar-cta" onclick="openFormMobile()">קבל הצעה</button>
+</div>
+
+<script>
+  const sliders = {
+    projects: { el: document.getElementById('s-projects'), out: document.getElementById('v-projects'), fmt: v => v },
+    team:     { el: document.getElementById('s-team'),     out: document.getElementById('v-team'),     fmt: v => v + ' אנשים' },
+    hours:    { el: document.getElementById('s-hours'),    out: document.getElementById('v-hours'),    fmt: v => v + ' שעות' },
+    rate:     { el: document.getElementById('s-rate'),     out: document.getElementById('v-rate'),     fmt: v => '₪' + v },
+    budget:   { el: document.getElementById('s-budget'),   out: document.getElementById('v-budget'),   fmt: v => '₪' + v + 'M' },
+  };
+
+  Object.entries(sliders).forEach(([k, s]) => {
+    s.el.addEventListener('input', () => { s.out.textContent = s.fmt(+s.el.value); calc(); });
+  });
+
+  document.querySelectorAll('.role-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.role-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      calc();
+    });
+  });
+
+  function fmt(n) {
+    if (n >= 1000000) return '₪' + (n/1000000).toFixed(1) + 'M';
+    if (n >= 1000) return '₪' + Math.round(n/1000) + 'K';
+    return '₪' + Math.round(n);
+  }
+  function fmtHours(n) {
+    return Math.round(n).toLocaleString('he-IL') + ' ש׳';
+  }
+  function fmtShort(n) {
+    if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+    if (n >= 1000) return Math.round(n/1000) + 'K';
+    return Math.round(n).toLocaleString('he-IL');
+  }
+
+  function calc() {
+    const p = +sliders.projects.el.value;
+    const h = +sliders.hours.el.value;
+    const r = +sliders.rate.el.value;
+    const b = +sliders.budget.el.value * 1000000;
+
+    const roleMult = { manager: 1.0, supervisor: 0.85, contractor: 0.9, estimator: 1.1, planner: 0.95, authority: 1.2 };
+    const activeRole = document.querySelector('.role-pill.active')?.dataset.role || 'manager';
+    const mult = roleMult[activeRole] || 1;
+
+    const weeklyHoursSaved = h * 0.65 * p * mult;
+    const yearlyHours = weeklyHoursSaved * 48;
+    const moneySaved = yearlyHours * r;
+    const errorSaved = b * p * 0.009 * mult;
+    const coordSaved = p * 12 * r * 4 * mult;
+    const total = Math.round(moneySaved + errorSaved + coordSaved);
+
+    document.getElementById('r-hours').textContent = fmtHours(yearlyHours);
+    document.getElementById('r-money').textContent = fmt(moneySaved);
+    document.getElementById('r-errors').textContent = fmt(errorSaved);
+    document.getElementById('r-coord').textContent = fmt(coordSaved);
+    document.getElementById('r-total').textContent = fmtShort(total);
+    document.getElementById('mb-total').textContent = fmtShort(total);
+
+    const licenseEst = p * 800 * 12;
+    const roi = licenseEst > 0 ? Math.round(total / licenseEst) : 0;
+    const roiPct = Math.min(100, Math.round((roi / 20) * 100));
+    document.getElementById('roi-bar').style.width = roiPct + '%';
+    document.getElementById('roi-label').textContent = 'ROI: ' + roi + 'x';
+
+    const payback = licenseEst > 0 ? Math.max(1, Math.round(licenseEst / (total/12))) : '?';
+    document.getElementById('payback-months').textContent = payback;
+  }
+
+  function openForm() {
+    const form = document.getElementById('contact-form');
+    form.classList.toggle('open');
+    if (form.classList.contains('open')) {
+      setTimeout(() => form.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+
+  function openFormMobile() {
+    const form = document.getElementById('contact-form');
+    const ctaSection = document.getElementById('cta-default');
+    form.classList.add('open');
+    setTimeout(() => ctaSection.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+  }
+
+  function submitForm() {
+    const name = document.getElementById('f-name').value;
+    const phone = document.getElementById('f-phone').value;
+    if (!name || !phone) { alert('נא למלא שם וטלפון'); return; }
+    document.getElementById('cta-default').style.display = 'none';
+    document.getElementById('success-state').classList.add('show');
+    document.getElementById('mobile-bar').style.display = 'none';
+  }
+
+  calc();
+</script>
+</body>
+</html>
