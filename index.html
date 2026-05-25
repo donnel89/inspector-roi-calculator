@@ -930,10 +930,14 @@
     const weeklyHoursSaved = h * 0.65 * p * mult;
     const yearlyHours = weeklyHoursSaved * 48;
     const moneySaved = yearlyHours * r;
-    const errorSaved = b * p * 0.009 * mult;
-    const coordSaved = p * 12 * r * 4 * mult;
+    const errorSaved = b * p * 0.015 * mult;
+
+    const rolesWithoutCoord = ['manager', 'supervisor', 'authority'];
+    const showCoord = !rolesWithoutCoord.includes(activeRole);
+    const coordSaved = showCoord ? p * 12 * r * 4 * mult : 0;
     const total = Math.round(moneySaved + errorSaved + coordSaved);
 
+    document.getElementById('row-coord').style.display = showCoord ? '' : 'none';
     document.getElementById('r-hours').textContent = fmtHours(yearlyHours);
     document.getElementById('r-money').textContent = fmt(moneySaved);
     document.getElementById('r-errors').textContent = fmt(errorSaved);
