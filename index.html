@@ -950,10 +950,16 @@
     const rolesWithoutCoord = ['manager', 'supervisor', 'authority', 'planner'];
     const showCoord = !rolesWithoutCoord.includes(activeRole);
     const coordSaved = showCoord ? p * 12 * r * 4 * mult : 0;
-    const total = Math.round(moneySaved + errorSaved + coordSaved);
+
+    const showContractor = activeRole === 'contractor';
+    const contractorSaved = showContractor ? b * p * 0.02 * mult : 0;
+
+    const total = Math.round(moneySaved + errorSaved + coordSaved + contractorSaved);
 
     document.getElementById('row-errors').style.display = showErrors ? '' : 'none';
     document.getElementById('row-coord').style.display = showCoord ? '' : 'none';
+    document.getElementById('row-contractor').style.display = showContractor ? '' : 'none';
+    document.getElementById('r-contractor').textContent = showContractor ? fmt(contractorSaved) : '—';
     document.getElementById('budget-label').textContent = activeRole === 'planner' ? 'שכר טרחה לפרויקט' : 'תקציב ממוצע לפרויקט';
     document.getElementById('r-hours').textContent = fmtHours(yearlyHours);
     document.getElementById('r-money').textContent = fmt(moneySaved);
