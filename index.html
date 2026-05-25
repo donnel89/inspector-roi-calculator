@@ -994,6 +994,15 @@
     document.getElementById('row-contractor').style.display = showContractor ? '' : 'none';
     document.getElementById('r-contractor').textContent = showContractor ? fmt(contractorSaved) : '—';
     document.getElementById('budget-label').textContent = activeRole === 'planner' ? 'שכר טרחה לפרויקט' : 'תקציב ממוצע לפרויקט';
+
+    // נוסחאות הסבר
+    const pct = Math.round(hoursFactor * 100);
+    const bLabel = sliders.budget.el.value + 'M';
+    document.getElementById('f-hours').textContent    = `${h}ש׳ × ${pct}% × ${p} פרויק׳ × 48שב׳`;
+    document.getElementById('f-money').textContent    = `${Math.round(yearlyHours).toLocaleString('he-IL')}ש׳ × ₪${r}`;
+    document.getElementById('f-errors').textContent   = `₪${bLabel} × ${p} פרויק׳ × 1.5%`;
+    document.getElementById('f-coord').textContent    = `${p} פרויק׳ × 12 × ₪${r} × 4`;
+    document.getElementById('f-contractor').textContent = `₪${bLabel} × ${p} פרויק׳ × 2%`;
     document.getElementById('r-hours').textContent = fmtHours(yearlyHours);
     document.getElementById('r-money').textContent = fmt(moneySaved);
     document.getElementById('r-errors').textContent = fmt(errorSaved);
