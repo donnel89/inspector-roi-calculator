@@ -930,14 +930,18 @@
     const weeklyHoursSaved = h * 0.65 * p * mult;
     const yearlyHours = weeklyHoursSaved * 48;
     const moneySaved = yearlyHours * r;
-    const errorSaved = b * p * 0.015 * mult;
 
-    const rolesWithoutCoord = ['manager', 'supervisor', 'authority'];
+    const showErrors = activeRole !== 'planner';
+    const errorSaved = showErrors ? b * p * 0.015 * mult : 0;
+
+    const rolesWithoutCoord = ['manager', 'supervisor', 'authority', 'planner'];
     const showCoord = !rolesWithoutCoord.includes(activeRole);
     const coordSaved = showCoord ? p * 12 * r * 4 * mult : 0;
     const total = Math.round(moneySaved + errorSaved + coordSaved);
 
+    document.getElementById('row-errors').style.display = showErrors ? '' : 'none';
     document.getElementById('row-coord').style.display = showCoord ? '' : 'none';
+    document.getElementById('budget-label').textContent = activeRole === 'planner' ? 'שכר טרחה לפרויקט' : 'תקציב ממוצע לפרויקט';
     document.getElementById('r-hours').textContent = fmtHours(yearlyHours);
     document.getElementById('r-money').textContent = fmt(moneySaved);
     document.getElementById('r-errors').textContent = fmt(errorSaved);
