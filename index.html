@@ -985,11 +985,11 @@
     // נוסחאות הסבר
     const pct = Math.round(hoursFactor * 100);
     const bLabel = sliders.budget.el.value + 'M';
-    document.getElementById('f-hours').textContent    = `${h}ש׳ × ${pct}% × ${p} פרויק׳ × 48שב׳`;
-    document.getElementById('f-money').textContent    = `${Math.round(yearlyHours).toLocaleString('he-IL')}ש׳ × ₪${r}`;
-    document.getElementById('f-errors').textContent   = `₪${bLabel} × ${p} פרויק׳ × 1.5%`;
-    document.getElementById('f-coord').textContent    = `${p} פרויק׳ × 12 × ₪${r} × 4`;
-    document.getElementById('f-contractor').textContent = `₪${bLabel} × ${p} פרויק׳ × 2%`;
+    document.getElementById('f-hours').textContent    = `${h} שעות ידניות בשבוע × ${pct}% חיסכון × ${p} פרויקטים × 48 שבועות בשנה`;
+    document.getElementById('f-money').textContent    = `${Math.round(yearlyHours).toLocaleString('he-IL')} שעות חסכון שנתיות × ₪${r} לשעה`;
+    document.getElementById('f-errors').textContent   = `₪${bLabel} היקף פרויקט × ${p} פרויקטים × 1.5% שיעור חריגה ממוצע`;
+    document.getElementById('f-coord').textContent    = `${p} פרויקטים × 12 חודשים × 4 שעות תיאום × ₪${r} לשעה`;
+    document.getElementById('f-contractor').textContent = `₪${bLabel} היקף פרויקט × ${p} פרויקטים × 2% חריגים שלא תועדו`;
     document.getElementById('r-hours').textContent = fmtHours(yearlyHours);
     document.getElementById('r-money').textContent = fmt(moneySaved);
     document.getElementById('r-errors').textContent = fmt(errorSaved);
